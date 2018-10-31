@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<TipoDeduccion id="1" nombre="Deducción de caja del seguro"/>
+	<TipoDeduccion id="2" nombre="Asociación solidarista"/>
+	<TipoDeduccion id="3" nombre="Embargo por deuda"/>
+	<TipoDeduccion id="4" nombre="Embargo por pensión alimenticia"/>
+</dataset>

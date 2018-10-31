@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<TipoMovimiento id="1" nombre="Crédito por jornada diaria laboral"/>
+	<TipoMovimiento id="2" nombre="Crédito por jornada extraordinaria laboral(horas extras)"/>
+	<TipoMovimiento id="3" nombre="Crédito por ausencia justificada debido a incapacidad"/>
+	<TipoMovimiento id="4" nombre="Bono"/>
+	<TipoMovimiento id="5" nombre="Crédito por ajuste"/>
+	<TipoMovimiento id="6" nombre="Deducción de caja del seguro"/>
+	<TipoMovimiento id="7" nombre="Asociación solidarista"/>
+	<TipoMovimiento id="8" nombre="Embargo por deuda"/>
+	<TipoMovimiento id="9" nombre="Embargo por pensión alimenticia"/>
+</dataset>

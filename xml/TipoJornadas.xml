@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<TipoJornadas id="1" nombre="Diaria" HoraInicio="6:00" HoraFin="14:00"/>
+	<TipoJornadas id="2" nombre="Vespertina" HoraInicio="14:00" HoraFin="19:00"/>
+	<TipoJornadas id="3" nombre="Nocturna" HoraInicio="19:00" HoraFin="6:00"/>
+</dataset>

@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<SalarioxHora id="1" idPuesto="1" idTipoJornada="1" valorHora="1250.00"/>
+	<SalarioxHora id="2" idPuesto="2" idTipoJornada="1" valorHora="1250.00"/>
+	<SalarioxHora id="3" idPuesto="3" idTipoJornada="1" valorHora="1250.00"/>
+	<SalarioxHora id="4" idPuesto="4" idTipoJornada="1" valorHora="1250.00"/>
+	<SalarioxHora id="5" idPuesto="5" idTipoJornada="1" valorHora="1250.00"/>
+	<SalarioxHora id="6" idPuesto="1" idTipoJornada="2" valorHora="1500.00"/>
+	<SalarioxHora id="7" idPuesto="2" idTipoJornada="2" valorHora="1500.00"/>
+	<SalarioxHora id="8" idPuesto="3" idTipoJornada="2" valorHora="1500.00"/>
+	<SalarioxHora id="9" idPuesto="4" idTipoJornada="2" valorHora="1500.00"/>
+	<SalarioxHora id="10" idPuesto="5" idTipoJornada="2" valorHora="1500.00"/>
+	<SalarioxHora id="11" idPuesto="1" idTipoJornada="3" valorHora="1750.00"/>
+	<SalarioxHora id="12" idPuesto="2" idTipoJornada="3" valorHora="1750.00"/>
+	<SalarioxHora id="13" idPuesto="3" idTipoJornada="3" valorHora="1750.00"/>
+	<SalarioxHora id="14" idPuesto="4" idTipoJornada="3" valorHora="1750.00"/>
+	<SalarioxHora id="15" idPuesto="5" idTipoJornada="3" valorHora="1750.00"/>
+</dataset>

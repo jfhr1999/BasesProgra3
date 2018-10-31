@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<Puesto id="1" nombre="Carpintero"/>
+	<Puesto id="2" nombre="Ayudante"/>
+	<Puesto id="3" nombre="Albañil"/>
+	<Puesto id="4" nombre="Mecánico"/>
+	<Puesto id="5" nombre="Chofer"/>
+</dataset>
