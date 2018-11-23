@@ -13,5 +13,5 @@ EXEC @PrepareXmlStatusAD = sp_xml_preparedocument @handle OUTPUT, @XMLPuesto
 --se insertan los valores de los xml dentro de las variables tabla
 INSERT dbo.Puesto(id, nombre)
 	SELECT id, nombre
-	FROM OPENXML(@handle, '/dataset/Puesto') WITH (id int, nombre varchar(50) , valorDocId varchar(50), contrasenna varchar(50))
+	FROM OPENXML(@handle, '/dataset/Puesto') WITH (id int, nombre varchar(50))
 
