@@ -1,7 +1,7 @@
 USE [Progra 3 Bases de Datos]
 GO
 
-/****** Object:  Table [dbo].[Movimiento Horas Trabajadas]    Script Date: 23/11/2018 11:04:32 a. m. ******/
+/****** Object:  Table [dbo].[Movimiento Horas Trabajadas]    Script Date: 24/11/2018 2:14:42 p. m. ******/
 SET ANSI_NULLS ON
 GO
 
@@ -12,8 +12,6 @@ CREATE TABLE [dbo].[Movimiento Horas Trabajadas](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[IdAsistencia] [int] NOT NULL,
 	[IdTipoMovimiento] [int] NOT NULL,
-	[Fecha] [date] NOT NULL,
-	[Monto] [money] NOT NULL,
 	[tipoJornada] [varchar](50) NOT NULL,
 	[cantidadHoras] [varchar](50) NOT NULL,
  CONSTRAINT [PK_Movimiento Horas Trabajadas] PRIMARY KEY CLUSTERED 

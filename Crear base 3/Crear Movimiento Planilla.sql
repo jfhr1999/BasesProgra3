@@ -1,7 +1,7 @@
 USE [Progra 3 Bases de Datos]
 GO
 
-/****** Object:  Table [dbo].[Movimiento Planilla]    Script Date: 23/11/2018 11:04:51 a. m. ******/
+/****** Object:  Table [dbo].[Movimiento Planilla]    Script Date: 24/11/2018 2:14:05 p. m. ******/
 SET ANSI_NULLS ON
 GO
 
@@ -12,7 +12,6 @@ CREATE TABLE [dbo].[Movimiento Planilla](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[IdPlanillaSemanal] [int] NOT NULL,
 	[IdTipoMovimiento] [int] NOT NULL,
-	[idMovHoras] [int] NOT NULL,
 	[Fecha] [date] NOT NULL,
 	[Monto] [money] NOT NULL,
  CONSTRAINT [PK_Movimiento Planilla] PRIMARY KEY CLUSTERED 
@@ -22,11 +21,11 @@ CREATE TABLE [dbo].[Movimiento Planilla](
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[Movimiento Planilla]  WITH CHECK ADD  CONSTRAINT [FK_Movimiento Planilla_Movimiento Horas Trabajadas] FOREIGN KEY([idMovHoras])
+ALTER TABLE [dbo].[Movimiento Planilla]  WITH CHECK ADD  CONSTRAINT [FK_Movimiento Planilla_Movimiento Horas Trabajadas1] FOREIGN KEY([Id])
 REFERENCES [dbo].[Movimiento Horas Trabajadas] ([Id])
 GO
 
-ALTER TABLE [dbo].[Movimiento Planilla] CHECK CONSTRAINT [FK_Movimiento Planilla_Movimiento Horas Trabajadas]
+ALTER TABLE [dbo].[Movimiento Planilla] CHECK CONSTRAINT [FK_Movimiento Planilla_Movimiento Horas Trabajadas1]
 GO
 
 ALTER TABLE [dbo].[Movimiento Planilla]  WITH CHECK ADD  CONSTRAINT [FK_Movimiento Planilla_Planilla Semanal] FOREIGN KEY([IdPlanillaSemanal])
