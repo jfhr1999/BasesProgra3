@@ -70,7 +70,9 @@ DROP TABLE cuentasCrear2
 DROP TABLE cuentasCrear3
 
 --declaro variables que son vitales para la simulacion y otras variables que son constantes, así como tablas para preprocesar
-declare @lo1 int, @hi1 int, @FechaOp date
+declare @lo1 int, @hi1 int, @lo2 int, @hi2 int, @FechaOp date, @fot time(7), @fit time(7), @sot time(7), @sit time(7), @idP int, @salario money, @idEmp int, @valDeduc money, @idDeduc int
+
+DECLARE @asistOP table(sec int identity(1,1),idOP int,idEmpOP int, idtipojornada int, horaEntrada time(7), horaSalida time(7))
 
 --asigno las variables para el ciclo de fechas
 select @lo1 = min(F.sec), @hi1 = max(F.sec)
@@ -79,7 +81,6 @@ from @Fechas F
 --inicio el ciclo de fechas
 while @lo1 < @hi1
 begin
-	--limpiar las tablas diarias
 	
 
 	select @FechaOp = F.fecha
@@ -91,19 +92,114 @@ begin
 		insert into dbo.Empleado(nombre,DocId,IdPuesto)
 		select TC.nombre, TC.valorDocId, TC.puesto from @empleados TC
 		where TC.fechaIn = @FechaOp
-
-		insert into dbo.Asistencia(IdEmpleado, IdTipoJornada, Fecha, HoraEntrada, HoraSalida, Incapacidad)
-		select e.Id, a.idTipoJornada, @FechaOp, a.horaEntrada, a.horaSalida, 0 from @asist a inner join Empleado as e on a.docId = e.DocId 
-		where a.fechain = @FechaOp
-
-		insert into dbo.Asistencia(IdEmpleado, IdTipoJornada, Fecha, HoraEntrada, HoraSalida, Incapacidad)
-		select e.Id, a.idTipoJornada, @FechaOp, '0:00', '0:00', 1 from @incapacidad a inner join Empleado as e on a.docId = e.DocId 
-		where a.fechain = @FechaOp
-
-		insert into dbo.[Deducciones x Empleado](IdEmpleado,IdTipoDeduccion,Valor)
-		select e.Id, d.idTipoDeduccion, d.valor from @deduc d inner join Empleado as e on d.DocId = e.DocId
-		where d.fechaMov = @FechaOp
 	commit
+
+	insert into dbo.[Planilla Mensual](idEmpleado,fecha, SalarioBruto, SalarioNeto)
+	select e.id, @FechaOp, 0,0 from dbo.Empleado e inner join @empleados as ee on e.DocId = ee.valorDocId and ee.fechain = @FechaOp
+
+	insert into dbo.[Planilla Semanal](IdEmpleado,IdPlanillaMensual,SalarioBruto,SalarioNeto)
+	select pm.idEmpleado, pm.id, 0,0 from dbo.[Planilla Mensual] pm where pm.Fecha = @FechaOp
+
+	insert into dbo.Asistencia(IdEmpleado, IdTipoJornada, Fecha, HoraEntrada, HoraSalida, Incapacidad)
+	select e.Id, a.idTipoJornada, @FechaOp, a.horaEntrada, a.horaSalida, 0 from @asist a inner join Empleado as e on a.docId = e.DocId 
+	where a.fechain = @FechaOp
+
+	insert into @asistOP(idOP,idEmpOP,idtipojornada,horaEntrada, horaSalida)
+	select * from dbo.Asistencia 
+	where Asistencia.Fecha = @FechaOp and Asistencia.Incapacidad = 0
+
+	select @lo2 = min(aop.sec), @hi2 = max(aop.sec)
+	from @asistOP aop
+
+	while @lo2 < @hi2
+	begin
+		select @sot = tj.horaSalida, @sit = tj.horaEntrada from [Tipo Jornada] tj inner join @asistOP as att on att.IdTipoJornada = tj.Id
+		where att.sec = @lo2
+
+		select @fot = asi.horaSalida, @fit = asi.horaEntrada from  @asistOP asi
+		where asi.sec = @lo2
+
+		select @idP = E.idPuesto from Empleado E inner join @asistOP as A on e.Id = A.idEmpOP
+		where A.sec = @lo2
+
+		select @idEmp = A.idEmpOp from @asistOP A
+		where A.sec = @lo2
+
+		select @salario = PJ.SalarioxHoras from [Puesto x Tipo Jornada] PJ inner join @asistOP as assi on pj.IdTipoJornada = assi.IdTipoJornada where @idP = Pj.IdPuesto and  assi.sec = @lo2
+
+			if datepart(hour,@fot) = datepart(hour, @sot) and datepart(hour, @fit) = datepart(hour, @sit)
+				begin transaction
+					insert into [Movimiento Horas Trabajadas](IdAsistencia, IdTipoMovimiento, tipoJornada, cantidadHoras)
+					select a.IdOP, 1, a.idTipojornada, 8 from @asistOP a inner join Empleado as e on a.idEmpOP = e.Id
+					where a.sec = @lo2
+
+					insert into [Movimiento Planilla](IdPlanillaSemanal,IdTipoMovimiento, Fecha, monto)
+					select	PS.id,1,@FechaOp,@salario from [Planilla Semanal] PS inner join @asistOP as ASs on Ps.IdEmpleado = ASs.idEmpOP
+					where ASs.sec = @lo2
+
+					update [Planilla Semanal]
+					set SalarioBruto = SalarioBruto + @salario
+					where IdEmpleado = @idEmp
+				commit
+
+			set @lo2 = @lo2 + 1
+	end
+
+	delete @asistOP
+
+	insert into dbo.Asistencia(IdEmpleado, IdTipoJornada, Fecha, HoraEntrada, HoraSalida, Incapacidad)
+	select e.Id, a.idTipoJornada, @FechaOp, '0:00', '0:00', 1 from @incapacidad a inner join Empleado as e on a.docId = e.DocId 
+	where a.fechain = @FechaOp
+
+
+	insert into @asistOP(idOP,idEmpOP,idtipojornada,horaEntrada, horaSalida)
+	select * from dbo.Asistencia 
+	where Asistencia.Fecha = @FechaOp and Asistencia.Incapacidad = 1
+
+	select @lo2 = min(aop.sec), @hi2 = max(aop.sec)
+	from @asistOP aop
+
+	while @lo2 < @hi2
+	begin
+		select @sot = tj.horaSalida, @sit = tj.horaEntrada from [Tipo Jornada] tj inner join @asistOP as att on att.IdTipoJornada = tj.Id
+		where att.sec = @lo2
+
+		select @fot = asi.horaSalida, @fit = asi.horaEntrada from  @asistOP asi
+		where asi.sec = @lo2
+
+		select @idP = E.idPuesto from Empleado E inner join @asistOP as A on e.Id = A.idEmpOP
+		where A.sec = @lo2
+
+		select @idEmp = A.idEmpOp from @asistOP A
+		where A.sec = @lo2
+
+		select @salario = PJ.SalarioxHoras from [Puesto x Tipo Jornada] PJ inner join @asistOP as assi on pj.IdTipoJornada = assi.IdTipoJornada where @idP = Pj.IdPuesto and  assi.sec = @lo2
+
+			if datepart(hour,@fot) = datepart(hour, @sot) and datepart(hour, @fit) = datepart(hour, @sit)
+				begin transaction
+					insert into [Movimiento Horas Trabajadas](IdAsistencia, IdTipoMovimiento, tipoJornada, cantidadHoras)
+					select a.IdOP, 3, a.idTipojornada, 8 from @asistOP a inner join Empleado as e on a.idEmpOP = e.Id
+					where a.sec = @lo2
+
+					insert into [Movimiento Planilla](IdPlanillaSemanal,IdTipoMovimiento, Fecha, monto)
+					select	PS.id,3,@FechaOp,(@salario * 0.60) from [Planilla Semanal] PS inner join @asistOP as ASs on Ps.IdEmpleado = ASs.idEmpOP
+					where ASs.sec = @lo2
+
+					update [Planilla Semanal]
+					set SalarioBruto = SalarioBruto + (@salario * 0.60)
+					where IdEmpleado = @idEmp
+				commit
+
+			set @lo2 = @lo2 + 1
+	end
+
+	delete @asistOP
+
+	insert into dbo.[Deducciones x Empleado](IdEmpleado,IdTipoDeduccion,Valor)
+	select e.Id, d.idTipoDeduccion, d.valor from @deduc d inner join Empleado as e on d.DocId = e.DocId
+	where d.fechaMov = @FechaOp
+
+	
 
 	
 	set @lo1 = @lo1 + 1
